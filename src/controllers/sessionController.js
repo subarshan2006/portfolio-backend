@@ -118,3 +118,8 @@ export const checkConflicts = asyncHandler(async (req, res) => {
     const result = await sessionService.checkConflicts(req.tutorId, date, startTime, endTime, excludeSessionId);
     return ApiResponse.success(res, { data: result });
 });
+
+export const completeSession = asyncHandler(async (req, res) => {
+    const session = await sessionService.completeSession(req.params.id, req.tutorId, req.body);
+    return ApiResponse.success(res, { data: session, message: 'Session completed successfully' });
+});

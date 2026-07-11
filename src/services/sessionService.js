@@ -1,7 +1,10 @@
 import sessionRepository from '../repositories/sessionRepository.js';
+import summaryRepository from '../repositories/summaryRepository.js';
+import studentRepository from '../repositories/studentRepository.js';
 import ApiError from '../utils/apiError.js';
 import MESSAGES from '../constants/messages.js';
 import activityLogService from './activityLogService.js';
+import * as notificationService from './notificationService.js';
 import { ACTIVITY_TYPE, ENTITY_TYPE } from '../constants/constants.js';
 import { timeToMinutes, addDays, getStartOfWeek, getEndOfWeek } from '../utils/dateUtils.js';
 import { doTimesOverlap } from '../utils/dateUtils.js';
@@ -330,4 +333,41 @@ export const checkConflicts = async (tutorId, date, startTime, endTime, excludeS
         hasConflict: !!conflict,
         conflictingSession: conflict || null,
     };
+};
+
+export const completeSession = async (sessionId, tutorId, summaryData) => {
+    const session = await sessionRepository.findByIdAndTutor(sessionId, tutorId);
+    if (!session) {
+        throw ApiError.notFound(MESSAGES.SESSION_NOT_FOUND);
+    }
+
+    if (session.status === 'COMPLETED') {
+        throw ApiError.badRequest('Session is already completed');
+    }
+
+    const updatedSession = await sessionRepository.updateById(sessionId, {
+        status: 'COMPLETED',
+        topicCompleted: summaryData.topicCompleted || session.topicPlanned,
+        homeworkGiven: summaryData.homeworkGiven,
+        homeworkStatus: summaryData.homeworkGiven ? 'ASSIGNED' : session.homeworkStatus,
+        understandingLevel: summaryData.understandingLevel,
+        focusLevel: summaryData.focusLevel,
+        overallRating: summaryData.overallRating,
+        personalNotes: summaryData.personalNotes,
+    });
+
+    await activityLogService.log({
+        tutorId,
+        entityType: ENTITY_TYPE.SESSION,
+        entityId: sessionId,
+        action: ACTIVITY_TYPE.SESSION_COMPLETED,
+        previousData: { status: session.status },
+        newData: {
+            status: 'COMPLETED',
+            topicCompleted: summaryData.topicCompleted,
+            understandingLevel: summaryData.understandingLevel,
+        },
+    });
+
+    return updatedSession;
 };

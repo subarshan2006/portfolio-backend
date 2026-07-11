@@ -74,6 +74,18 @@ class StudentRepository extends BaseRepository {
         return Student.countDocuments({ tutorId, status, deletedAt: null });
     }
 
+    async findByBirthdate(month, day) {
+        return Student.find({
+            deletedAt: null,
+            dateOfBirth: { $exists: true, $ne: null },
+        }).then((students) => {
+            return students.filter((student) => {
+                const dob = new Date(student.dateOfBirth);
+                return dob.getMonth() + 1 === month && dob.getDate() === day;
+            });
+        });
+    }
+
     async findStudentsWithUpcomingBirthdays(tutorId, daysAhead = 7) {
         const today = new Date();
         const futureDate = new Date(today);

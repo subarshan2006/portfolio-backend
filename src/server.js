@@ -4,6 +4,7 @@ dotenv.config();
 import app from './app.js';
 import connectDB from './config/database.js';
 import env from './config/env.js';
+import { startCronJobs, stopCronJobs } from './jobs/cronScheduler.js';
 
 const startServer = async () => {
     try {
@@ -13,15 +14,16 @@ const startServer = async () => {
             console.log(`Server running in ${env.nodeEnv} mode on port ${env.port}`);
         });
 
-        // Graceful shutdown
+        startCronJobs();
+
         const gracefulShutdown = (signal) => {
             console.log(`${signal} received. Starting graceful shutdown...`);
+            stopCronJobs();
             server.close(() => {
                 console.log('HTTP server closed.');
                 process.exit(0);
             });
 
-            // Force shutdown after 10s
             setTimeout(() => {
                 console.error('Forced shutdown after timeout');
                 process.exit(1);
@@ -33,6 +35,7 @@ const startServer = async () => {
 
         process.on('unhandledRejection', (err) => {
             console.error('Unhandled Rejection:', err.message);
+            stopCronJobs();
             server.close(() => process.exit(1));
         });
     } catch (error) {

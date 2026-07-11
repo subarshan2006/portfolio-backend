@@ -4,7 +4,7 @@ import studentRepository from '../repositories/studentRepository.js';
 import ApiError from '../utils/apiError.js';
 import MESSAGES from '../constants/messages.js';
 import activityLogService from './activityLogService.js';
-import notificationService from './notificationService.js';
+import * as notificationService from './notificationService.js';
 import { ACTIVITY_TYPE, ENTITY_TYPE } from '../constants/constants.js';
 import { sendSessionSummaryEmail } from './emailService.js';
 

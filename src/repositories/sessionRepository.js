@@ -191,6 +191,25 @@ class SessionRepository extends BaseRepository {
             deletedAt: null,
         });
     }
+
+    async findUpcomingSessionsForReminders(startDate, endDate) {
+        return Session.find({
+            date: { $gte: startDate, $lt: endDate },
+            status: 'SCHEDULED',
+            deletedAt: null,
+        })
+            .populate('studentId', 'name parentEmail parentName')
+            .populate('tutorId', 'name email');
+    }
+
+    async findMissedSessionsForDate(startDate, endDate) {
+        return Session.find({
+            date: { $gte: startDate, $lt: endDate },
+            status: 'SCHEDULED',
+            deletedAt: null,
+        })
+            .populate('studentId', 'name');
+    }
 }
 
 export default new SessionRepository();

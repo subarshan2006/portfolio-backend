@@ -31,6 +31,7 @@ router.post('/', createSessionValidator, validate, sessionController.createSessi
 router.get('/:id', [...sessionIdValidator], validate, sessionController.getSessionById);
 router.put('/:id', [...sessionIdValidator, ...updateSessionValidator], validate, sessionController.updateSession);
 router.patch('/:id/status', [...sessionIdValidator, ...statusValidator], validate, sessionController.updateSessionStatus);
+router.patch('/:id/complete', [...sessionIdValidator], validate, sessionController.completeSession);
 router.patch('/:id/attendance', [...sessionIdValidator, ...attendanceValidator], validate, sessionController.markAttendance);
 router.post('/:id/reschedule', [...sessionIdValidator, ...rescheduleValidator], validate, sessionController.rescheduleSession);
 router.delete('/:id', [...sessionIdValidator], validate, sessionController.deleteSession);

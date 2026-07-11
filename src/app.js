@@ -11,6 +11,9 @@ import notFound from './middleware/notFound.js';
 import authRoutes from './routes/authRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import sessionRoutes from './routes/sessionRoutes.js';
+import summaryRoutes from './routes/summaryRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 const app = express();
 
@@ -55,6 +58,9 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/summaries', summaryRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // 404 handler
 app.use(notFound);
