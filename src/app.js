@@ -14,6 +14,10 @@ import sessionRoutes from './routes/sessionRoutes.js';
 import summaryRoutes from './routes/summaryRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import homeworkRoutes from './routes/homeworkRoutes.js';
+import goalRoutes from './routes/goalRoutes.js';
+import formulaRoutes from './routes/formulaRoutes.js';
+import doubtRoutes from './routes/doubtRoutes.js';
 
 const app = express();
 
@@ -61,6 +65,10 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/summaries', summaryRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/homework', homeworkRoutes);
+app.use('/api/goals', goalRoutes);
+app.use('/api/formulas', formulaRoutes);
+app.use('/api/doubts', doubtRoutes);
 
 // 404 handler
 app.use(notFound);
