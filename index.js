@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import router from './src/router/auth_router.js'
-import employeeRouter from './src/router/employee_router.js'
+import studentRouter from './src/router/student_router.js'
 import mongoose from 'mongoose';
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api',router);
-app.use('/api',employeeRouter);
+app.use('/api',studentRouter);
 
 const mongo = async () => {
     try{
